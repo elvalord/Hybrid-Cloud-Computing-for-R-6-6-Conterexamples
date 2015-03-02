@@ -1,0 +1,43 @@
+CC = gcc
+TOP = .
+INCLUDES = -I$(TOP)
+CFLAGS = -g 
+COMPILE = $(CC) $(INCLUDES) $(CFLAGS)
+
+INCL=./jrb.h ./jval.h ./dllist.h ./fifo.h ./graph.h ./search.h
+COMMON=.
+PRED=.
+BOBJ=$(COMMON)/jval.o $(COMMON)/jrb.o $(COMMON)/dllist.o $(COMMON)/fifo.o
+LIBS= -lm 
+
+PROGRAMS = iso_check
+
+all: $(PROGRAMS)
+
+
+iso_check: iso_check.c simple_taboo_search.o graph_clique_count.o $(INCL) ${BOBJ}
+	$(COMPILE) ${INCLUDES} -o iso_check iso_check.c simple_taboo_search.o graph_clique_count.o $(BOBJ) $(LIBS)
+
+simple_taboo_search: simple_taboo_search.c $(INCL) ${BOBJ}
+	$(COMPILE) ${INCLUDES} -o simple_taboo_search simple_taboo_search.c $(BOBJ) $(LIBS)
+
+graph_isomorph.o: graph_isomorph.c ${INCL} 
+	$(COMPILE) ${INCLUDES} -c graph_isomorph.c
+
+graph_clique_count.o: graph_isomorph.c ${INCL} 
+	$(COMPILE) ${INCLUDES} -c graph_clique_count.c
+
+fifo.o: fifo.c fifo.h jrb.h jval.h dllist.h
+	$(COMPILE) ${INCLUDES} -c fifo.c
+
+jrb.o: jrb.c jrb.h jval.h
+	$(COMPILE) ${INCLUDES} -c jrb.c
+
+jval.o: jval.c jval.h
+	$(COMPILE) ${INCLUDES} -c jval.c
+
+dllist.o: dllist.c dllist.h jval.h
+	$(COMPILE) ${INCLUDES} -c dllist.c
+
+clean:
+	rm -f *.o core
